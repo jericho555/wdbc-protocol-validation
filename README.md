@@ -1,6 +1,6 @@
 # WDBC Protocol Validation
 
-Reproducible analysis for **"Twenty-five Classifiers with Recursive Feature Elimination for Breast Cancer Diagnosis: Protocol Validation, Multi-Method Interpretation, and Model Agreement Analysis"**
+Companion code and analysis for **"Reproducible Evaluation of Breast Cancer Classifiers: Protocol Validation, Feature-Selection Stability, and Multi-Method Interpretation"**
 
 Author: Jeremiah Masaba (Makerere University)  
 Target venue: *Computer Methods and Programs in Biomedicine* (Elsevier)
