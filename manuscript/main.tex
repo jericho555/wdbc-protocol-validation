@@ -111,7 +111,7 @@ The identifier and trailing unnamed columns were discarded and the diagnosis enc
 
 \subsection{Classifiers and settings}
 
-Twenty-five model configurations, spanning 20 distinct learning algorithms from seven families, were trained with scikit-learn \cite{pedregosa2011scikit}, with the boosted ensemble supplied by xgboost 1.7.2 \cite{chen2016xgboost} on numpy 1.26.4: linear models (logistic regression with L2, L1 and elastic-net penalties; ridge \cite{hoerl1970ridge}; SGD with log loss \cite{shalev2011pegasos}; LDA; QDA; nearest centroid); tree-based ensembles (random forest \cite{breiman2001random}, extra trees \cite{geurts2006extremely}, gradient boosting \cite{friedman2001greedy}, AdaBoost \cite{freund2012short}, XGBoost, histogram-based gradient boosting \cite{ke2017lightgbm}, bagging); support vector machines (linear \cite{cortes1995support}, RBF, Nu-SVC \cite{scholkopf2000new}); K-nearest neighbours ($k=20$); a multilayer perceptron (one hidden layer of 100 rectified-linear units, Adam, $\alpha=10^{-4}$, default and seeded configurations); a Gaussian process classifier \cite{rasmussen2006gaussian}; and meta-estimators (soft and hard voting; stacking of random forest and XGBoost with a logistic meta-learner) \cite{wolpert1992stacked}. All values except $k$ and the stacking meta-learner are library defaults; each arm was evaluated with all 30 features and with RFE-12 (full configuration list in the Supplementary Material).
+Twenty-five model configurations, spanning 20 distinct learning algorithms from seven families, were trained with scikit-learn \cite{pedregosa2011scikit}, with the boosted ensemble supplied by xgboost 1.7.2 \cite{chen2016xgboost} on numpy 1.26.4: linear models (logistic regression with L2, L1 and elastic-net penalties; ridge \cite{hoerl1970ridge}; SGD with log loss \cite{shalev2011pegasos}; LDA; QDA; nearest centroid); tree-based ensembles (random forest \cite{breiman2001random}, extra trees \cite{geurts2006extremely}, gradient boosting \cite{friedman2001greedy}, AdaBoost \cite{freund2012short}, XGBoost, histogram-based gradient boosting \cite{ke2017lightgbm}, bagging); support vector machines (linear \cite{cortes1995support}, RBF, Nu-SVC \cite{scholkopf2000new}); K-nearest neighbours ($k=20$); a multilayer perceptron (one hidden layer of 100 rectified-linear units, Adam, $\alpha=10^{-4}$, default and seeded configurations); a Gaussian process classifier \cite{rasmussen2006gaussian}; and meta-estimators (soft and hard voting; stacking of random forest and XGBoost with a logistic meta-learner) \cite{wolpert1992stacked}. All values except $k$ and the stacking meta-learner are library defaults; each arm was evaluated with all 30 features and with RFE-12 (full configuration list in the accompanying repository).
 
 \subsection{Recursive feature elimination}
 
@@ -178,7 +178,7 @@ Table~\ref{tab:models} reports the top configurations on the reference partition
 
 \begin{table}[ht!]
 \centering
-\caption{Top-performing configurations on the reference partition (426 training, 143 test). The full 25-model panel is in the accompanying repository \cite{masaba2026code}. Sensitivity is the recall of the malignant class, specificity the recall of the benign class, $FN$ the count of malignant cases called benign. AUC, Brier score, and ECE are reported where the model emits calibrated probabilities.}
+\caption{Top-performing configurations on the reference partition (426 training, 143 test). The full 25-model panel is in the accompanying repository \cite{masaba2026code}. Sensitivity is the recall of the malignant class, specificity the recall of the benign class, $FN$ the count of malignant cases called benign. AUC is reported where the model emits a probability or a monotone decision margin; Brier score and expected calibration error for these models appear in the calibration analysis (Figure~\ref{fig:calibration}).}
 \label{tab:models}
 \renewcommand{\arraystretch}{1.12}
 \small
@@ -289,7 +289,7 @@ Exact permutation importance (50 shuffles per column, seed 0) places the largest
 \label{fig:perm}
 \end{figure}
 
-Figure~\ref{fig:consensus} compares feature importance rankings across all four interpretation methods.
+Figure~\ref{fig:consensus} compares the four global-importance views used here (exact SHAP, permutation importance, logistic $|\beta|$ and a univariate AUC screen); partial dependence and LIME describe response shape and per-case locality rather than a single global ranking, so they are reported separately above and in the repository.
 
 \begin{figure}[ht!]
 \centering
