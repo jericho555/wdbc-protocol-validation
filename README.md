@@ -57,7 +57,7 @@ python scripts/visualize.py        # Regenerate all 15 figures
 | Split | 75/25 stratified, `random_state=42` → 426 train / 143 test |
 | Feature selection | RFE (DecisionTree, `random_state=0`), k=12, fitted on training rows only |
 | Scaling | `StandardScaler` fitted on training rows only |
-| Models | 25 classifiers across 7 families (see Table 2) |
+| Models | 25 model configurations, 20 distinct learning algorithms across 7 families (see Table 1) |
 | CV protocol | Repeated stratified 5-fold × 4 = 20 folds, selector inside each fold |
 | Permutation importance | 50 column-wise shuffles per family, seed 0, manual numpy loop |
 | SHAP | TreeSHAP via `xgboost.predict(output_contributions=True)` |
