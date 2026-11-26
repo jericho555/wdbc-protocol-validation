@@ -1,0 +1,145 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+ModuleNotFoundError: No module named 'joblib'
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+ModuleNotFoundError: No module named 'joblib'
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+ModuleNotFoundError: No module named 'joblib'
+ERROR: The process "30200" not found.
+ERROR: The process "28644" not found.
+====================================================================================================
+INTERPRETATION | stack B | sklearn 1.7.2 | xgboost 1.7.2 | numpy 1.26.4
+====================================================================================================
+the retained twelve: area_se, area_worst, compactness_se, compactness_worst, concave points_mean, concave points_se, fractal_dimension_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, texture_worst
+M_REF  140/143   M_LIN  141/143   (reproduces the panel rows)
+
+=== 1. THE LOGISTIC MODEL IS ITS OWN EXPLANATION (standardised, RFE-12) ===
+one line per feature: coefficient is the log-odds change per within-cohort sd;
+OR is exp(coefficient); the p-value is a Wald test on the fitted model, reported
+descriptively - 12 tests, no multiplicity correction applied.
+   1 area_se                  beta +1.778  OR  5.92  [0.57, 60.97]  z +1.49  p 0.1
+   2 texture_worst            beta +1.475  OR  4.37  [2.32, 8.22]  z +4.58  p 5e-06
+   3 concave points_mean      beta +1.448  OR  4.25  [0.51, 35.20]  z +1.34  p 0.2
+   4 radius_worst             beta +1.421  OR  4.14  [0.00, 4180731.42]  z +0.20  p 0.8
+   5 area_worst               beta +1.379  OR  3.97  [0.00, 11693072.70]  z +0.18  p 0.9
+   6 perimeter_worst          beta +1.159  OR  3.19  [0.00, 11147.91]  z +0.28  p 0.8
+   7 compactness_worst        beta +1.016  OR  2.76  [0.38, 20.23]  z +1.00  p 0.3
+   8 concave points_se        beta +0.751  OR  2.12  [0.35, 12.91]  z +0.81  p 0.4
+   9 compactness_se           beta -0.724  OR  0.48  [0.08, 3.05]  z -0.77  p 0.4
+  10 smoothness_worst         beta +0.720  OR  2.06  [0.54, 7.75]  z +1.06  p 0.3
+  11 fractal_dimension_se     beta -0.615  OR  0.54  [0.09, 3.23]  z -0.67  p 0.5
+  12 smoothness_se            beta -0.019  OR  0.98  [0.29, 3.34]  z -0.03  p 1
+  intercept -0.527  -> P(malignant) at the cohort mean = 0.371
+  the 18 discarded features, same pipeline, |beta| descending:
+     radius_se                beta +1.286  OR  3.62
+     symmetry_worst           beta +1.227  OR  3.41
+     concavity_worst          beta +1.006  OR  2.74
+     concave points_worst     beta +0.775  OR  2.17
+     concavity_mean           beta +0.735  OR  2.09
+     compactness_mean         beta -0.617  OR  0.54
+     perimeter_se             beta +0.593  OR  1.81
+     symmetry_se              beta -0.529  OR  0.59
+     area_mean                beta +0.452  OR  1.57
+     texture_mean             beta +0.412  OR  1.51
+     radius_mean              beta +0.404  OR  1.50
+     perimeter_mean           beta +0.354  OR  1.42
+     symmetry_mean            beta -0.243  OR  0.78
+     texture_se               beta -0.223  OR  0.80
+     smoothness_mean          beta +0.218  OR  1.24
+     fractal_dimension_worst  beta +0.148  OR  1.16
+     concavity_se             beta +0.145  OR  1.16
+     fractal_dimension_mean   beta -0.081  OR  0.92
+
+=== 2. EACH RETAINED FEATURE ON ITS OWN (training rows) ===
+univariate AUC and standardised mean difference; no model between the measurement and
+the label, so this is the clinical signal a single measurement carries.
+  feature                     AUC      d   mean B   mean M
+  area_se                   0.916   1.24   21.188   72.266
+  area_worst                0.962   2.13  562.842 1401.034
+  compactness_se            0.710   0.56    0.022    0.032
+  compactness_worst         0.851   1.45    0.182    0.360
+  concave points_mean       0.962   2.53    0.025    0.086
+  concave points_se         0.784   0.89    0.010    0.015
+  fractal_dimension_se      0.607   0.11    0.004    0.004
+  perimeter_worst           0.968   2.49   87.366  139.998
+  radius_worst              0.963   2.43   13.417   20.953
+  smoothness_se             0.479  -0.10    0.007    0.007
+  smoothness_worst          0.753   0.95    0.124    0.144
+  texture_worst             0.797   1.10   23.336   29.189
+  concave points_worst      0.963   2.63    0.074    0.179   (not retained)
+  perimeter_se              0.863   1.28    2.014    4.304   (not retained)
+  area_mean                 0.927   1.97  466.253  974.937   (not retained)
+
+=== 3. EXACT TREE SHAP, M_REF (unscaled RFE-12 XGBoost, test rows) ===
+additivity check: sum(phi)+bias reproduces the margin? max |gap| 3.61e-04
+   1 concave points_mean      mean|phi| 2.1956   mean phi (M) +2.5706  (B) -1.2400
+   2 texture_worst            mean|phi| 1.3975   mean phi (M) +0.6747  (B) -0.6360
+   3 area_worst               mean|phi| 1.2835   mean phi (M) +1.4307  (B) -1.0916
+   4 perimeter_worst          mean|phi| 0.8264   mean phi (M) +0.7553  (B) -0.8310
+   5 compactness_se           mean|phi| 0.7832   mean phi (M) -0.5705  (B) -0.1300
+   6 smoothness_worst         mean|phi| 0.7622   mean phi (M) +0.6579  (B) -0.0943
+   7 area_se                  mean|phi| 0.7335   mean phi (M) +0.9264  (B) -0.4158
+   8 compactness_worst        mean|phi| 0.5550   mean phi (M) +0.5559  (B) -0.1713
+   9 radius_worst             mean|phi| 0.3787   mean phi (M) +0.5869  (B) -0.2058
+  10 concave points_se        mean|phi| 0.3579   mean phi (M) +0.1130  (B) -0.1895
+  11 smoothness_se            mean|phi| 0.1870   mean phi (M) -0.0031  (B) +0.0063
+  12 fractal_dimension_se     mean|phi| 0.1379   mean phi (M) -0.0550  (B) -0.0049
+  Spearman rank correlation of this ranking with:
+     the logistic |beta| ranking          rho +0.552
+     the wrapper tree's own importances   rho +0.196
+     univariate AUC of the twelve         rho +0.175
+  a model-need ranking is not a signal ranking: smoothness_se has the smallest univariate AUC
+  (0.479) yet ranks 11th by mean |SHAP| in M_REF.
+  the same classifier trained on all thirty: share of mean |phi| mass on the retained
+  twelve 0.495, on the discarded eighteen 0.505 (mass totals 9.9618)
+  largest attribution among the discarded: concave points_worst 1.2549, concavity_worst 0.8669, symmetry_worst 0.5184
+
+=== 4. INTERACTIONS: HOW MUCH OF M_REF IS NOT ADDITIVE? ===
+array shape (143, 12, 12) ; diagonal (main effects) 0.696 of total |value|, off-diagonal (pairs) 0.304
+  strongest pairs on the test rows:
+     concave points_mean      texture_worst            0.4414
+     concave points_mean      perimeter_worst          0.3426
+     concave points_mean      radius_worst             0.3407
+     compactness_se           concave points_mean      0.2265
+     area_se                  concave points_mean      0.2254
+     area_worst               concave points_mean      0.2138
+     compactness_se           texture_worst            0.2124
+     perimeter_worst          texture_worst            0.2078
+  weakest five of the 66:
+     concave points_se        fractal_dimension_se     0.0000
+     concave points_se        perimeter_worst          0.0000
+     concave points_se        smoothness_se            0.0000
+     fractal_dimension_se     smoothness_worst         0.0000
+     perimeter_worst          radius_worst             0.0000
+
+=== 5. PERMUTATION IMPORTANCE, FOUR FAMILIES, SAME TWELVE (test rows) ===
+accuracy drop when one column is shuffled, 50 repeats, mean +/- spread over repeats.
+Traceback (most recent call last):
+  File "c:\Users\Surface\Desktop\publish\_p1_interp.py", line 202, in <module>
+    r = permutation_importance(fit, Xi[nm], yte, scoring="accuracy", n_repeats=50,
+  File "c:\Users\Surface\Desktop\publish\._pkgs\sklearn\utils\_param_validation.py", line 218, in wrapper
+    return func(*args, **kwargs)
+  File "c:\Users\Surface\Desktop\publish\._pkgs\sklearn\inspection\_permutation_importance.py", line 288, in permutation_importance
+    scores = Parallel(n_jobs=n_jobs)(
+  File "c:\Users\Surface\Desktop\publish\._pkgs\sklearn\utils\parallel.py", line 82, in __call__
+    return super().__call__(iterable_with_config_and_warning_filters)
+  File "c:\Users\Surface\Desktop\publish\._pkgs\joblib\parallel.py", line 2098, in __call__
+    return output if self.return_generator else list(output)
+  File "c:\Users\Surface\Desktop\publish\._pkgs\joblib\parallel.py", line 1704, in _get_outputs
+    yield from self._retrieve()
+  File "c:\Users\Surface\Desktop\publish\._pkgs\joblib\parallel.py", line 1806, in _retrieve
+    self._raise_error_fast()
+  File "c:\Users\Surface\Desktop\publish\._pkgs\joblib\parallel.py", line 1885, in _raise_error_fast
+    error_job.get_result(self.timeout)
+  File "c:\Users\Surface\Desktop\publish\._pkgs\joblib\parallel.py", line 780, in get_result
+    return self._return_or_raise()
+  File "c:\Users\Surface\Desktop\publish\._pkgs\joblib\parallel.py", line 795, in _return_or_raise
+    raise self._result
+joblib.externals.loky.process_executor.TerminatedWorkerError: A worker process managed by the executor was unexpectedly terminated. This could be caused by a segmentation fault while calling the function or by an excessive memory usage causing the Operating System to kill the worker.
+
+Detailed tracebacks of the workers should have been printed to stderr in the executor process if faulthandler was not disabled.
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+ModuleNotFoundError: No module named 'joblib'

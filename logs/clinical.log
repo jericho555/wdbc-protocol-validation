@@ -1,0 +1,150 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+ModuleNotFoundError: No module named 'joblib'
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+ModuleNotFoundError: No module named 'joblib'
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+ModuleNotFoundError: No module named 'joblib'
+ERROR: The process "28036" not found.
+ERROR: The process "20304" not found.
+====================================================================================================
+CLINICAL STATISTICS | stack B | sklearn 1.7.2 | xgboost 1.7.2
+====================================================================================================
+twelve: area_se, area_worst, compactness_se, compactness_worst, concave points_mean, concave points_se, fractal_dimension_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, texture_worst
+
+=== 1. DOES XGBOOST DEPEND ON COLUMN ORDER? (found while cross-checking two logs) ===
+The panel scored standardised RFE-12 + XGBoost at 140/143; a second script that asked for
+the same twelve columns in alphabetical order rather than file order scored 139/143.
+Same rows, same hyper-parameters, same seed. This is that check, on both scales.
+  native / file order      140/143  AUC 0.9931
+  native / alphabetical    140/143  AUC 0.9963
+  scaled / file order      140/143  AUC 0.9931
+  scaled / alphabetical    140/143  AUC 0.9963
+  native / file order      vs native / alphabetical    max|dp| 0.14517, labels differ on 0 of 143, counts 140 vs 140
+  scaled / file order      vs scaled / alphabetical    max|dp| 0.14517, labels differ on 0 of 143, counts 140 vs 140
+  trees whose text differs between the two column orders (same scale): 100 of 100 native, 100 of 100 scaled
+  seeds 0/1/2/42 under the alphabetical scaled order: 140, 140, 140, 140
+
+=== 2. A THRESHOLD CHOSEN IN THE TRAINING ROWS, APPLIED ONCE ===
+reference model M_REF (unscaled RFE-12 XGBoost) and M_LIN (standardised RFE-12 logistic)
+  M_REF  out-of-fold Youden threshold 0.374 (J 0.941); spec>=0.95 threshold 0.170
+      0.50 default     corr 140  sens 0.963  spec 0.989  FN  2  FP  1  PPV 0.981  NPV 0.978
+      CV Youden        corr 140  sens 0.963  spec 0.989  FN  2  FP  1  PPV 0.981  NPV 0.978
+      CV spec>=0.95    corr 138  sens 0.963  spec 0.966  FN  2  FP  3  PPV 0.945  NPV 0.977
+      test AUC 0.9931  Brier 0.0215  ECE 0.0199 (threshold-free)
+  M_LIN  out-of-fold Youden threshold 0.374 (J 0.939); spec>=0.95 threshold 0.307
+      0.50 default     corr 141  sens 0.981  spec 0.989  FN  1  FP  1  PPV 0.981  NPV 0.989
+      CV Youden        corr 141  sens 0.981  spec 0.989  FN  1  FP  1  PPV 0.981  NPV 0.989
+      CV spec>=0.95    corr 139  sens 0.981  spec 0.966  FN  1  FP  3  PPV 0.946  NPV 0.989
+      test AUC 0.9988  Brier 0.0146  ECE 0.0216 (threshold-free)
+
+=== 3. PAIRED COMPARISONS ON THE SAME 143 ROWS (exact McNemar) ===
+McNemar is the right test here: both models see the identical cases, so only the
+discordant pairs carry information. Reported as an exact binomial test on b+c.
+  XGB rfe12 unscaled     140/143
+  XGB all30 unscaled     138/143
+  LogReg rfe12 scaled    141/143
+  SVMlin rfe12 scaled    141/143
+  ExtraTrees rfe12       140/143
+  RF all30 unscaled      139/143
+  KNN20 all30            138/143
+  PCA12 XGB scaled       138/143
+  pairs:
+     XGB rfe12 unscaled     vs XGB all30 unscaled      b  1 c  1  exact p 1.000
+     XGB rfe12 unscaled     vs LogReg rfe12 scaled     b  1 c  2  exact p 1.000
+     XGB rfe12 unscaled     vs SVMlin rfe12 scaled     b  1 c  2  exact p 1.000
+     XGB rfe12 unscaled     vs ExtraTrees rfe12        b  2 c  2  exact p 1.000
+     XGB rfe12 unscaled     vs RF all30 unscaled       b  2 c  1  exact p 1.000
+     XGB rfe12 unscaled     vs KNN20 all30             b  4 c  2  exact p 0.688
+     XGB rfe12 unscaled     vs PCA12 XGB scaled        b  2 c  4  exact p 0.688
+     XGB all30 unscaled     vs LogReg rfe12 scaled     b  2 c  3  exact p 1.000
+     XGB all30 unscaled     vs SVMlin rfe12 scaled     b  2 c  3  exact p 1.000
+     XGB all30 unscaled     vs ExtraTrees rfe12        b  1 c  1  exact p 1.000
+     XGB all30 unscaled     vs RF all30 unscaled       b  1 c  0  exact p 1.000
+     XGB all30 unscaled     vs KNN20 all30             b  4 c  2  exact p 0.688
+     XGB all30 unscaled     vs PCA12 XGB scaled        b  1 c  3  exact p 0.625
+     LogReg rfe12 scaled    vs SVMlin rfe12 scaled    identical errors (b=c=0)
+     LogReg rfe12 scaled    vs ExtraTrees rfe12        b  2 c  1  exact p 1.000
+     LogReg rfe12 scaled    vs RF all30 unscaled       b  3 c  1  exact p 0.625
+     LogReg rfe12 scaled    vs KNN20 all30             b  5 c  2  exact p 0.453
+     LogReg rfe12 scaled    vs PCA12 XGB scaled        b  2 c  3  exact p 1.000
+     SVMlin rfe12 scaled    vs ExtraTrees rfe12        b  2 c  1  exact p 1.000
+     SVMlin rfe12 scaled    vs RF all30 unscaled       b  3 c  1  exact p 0.625
+     SVMlin rfe12 scaled    vs KNN20 all30             b  5 c  2  exact p 0.453
+     SVMlin rfe12 scaled    vs PCA12 XGB scaled        b  2 c  3  exact p 1.000
+     ExtraTrees rfe12       vs RF all30 unscaled       b  1 c  0  exact p 1.000
+     ExtraTrees rfe12       vs KNN20 all30             b  4 c  2  exact p 0.688
+     ExtraTrees rfe12       vs PCA12 XGB scaled        b  0 c  2  exact p 0.500
+     RF all30 unscaled      vs KNN20 all30             b  3 c  2  exact p 1.000
+     RF all30 unscaled      vs PCA12 XGB scaled        b  0 c  3  exact p 0.250
+     KNN20 all30            vs PCA12 XGB scaled        b  2 c  6  exact p 0.289
+
+=== 4. HOW WIDE IS THE AUC ESTIMATE? (2000 bootstrap resamples of the 143) ===
+  M_REF  AUC 0.9931  bootstrap 95% [0.9818, 1.0000]  (2000 resamples, min spread 0.0182)
+  M_LIN  AUC 0.9988  bootstrap 95% [0.9957, 1.0000]  (2000 resamples, min spread 0.0043)
+
+=== 5. ERROR ANATOMY: WHICH CASES SURVIVE EVERY MODEL? ===
+  11 distinct test cases are missed by at least one of the 8 configurations;
+  4 are missed by half or more of them:
+     case  20  true malignant missed by  7/8  called malignant by  1  | furthest from cohort mean: fractal_dimension_worst +1.1 sd, texture_se -1.1 sd, symmetry_se -1.0 sd
+     case  77  true malignant missed by  5/8  called malignant by  3  | furthest from cohort mean: smoothness_mean +1.0 sd, smoothness_worst +0.9 sd, texture_se -0.7 sd
+     case  82  true malignant missed by  4/8  called malignant by  4  | furthest from cohort mean: texture_se +1.9 sd, symmetry_mean +1.0 sd, concave points_se +0.9 sd
+     case   8  true benign    missed by  4/8  called malignant by  4  | furthest from cohort mean: compactness_worst +1.6 sd, concavity_worst +1.1 sd, symmetry_worst +1.1 sd
+     case 136  true benign    missed by  2/8  called malignant by  2  | furthest from cohort mean: symmetry_se -0.9 sd, smoothness_mean +0.7 sd, radius_se -0.7 sd
+     case 112  true benign    missed by  2/8  called malignant by  2  | furthest from cohort mean: texture_worst +2.5 sd, texture_se +2.1 sd, texture_mean +2.0 sd
+     case  58  true malignant missed by  1/8  called malignant by  7  | furthest from cohort mean: concave points_worst +1.8 sd, fractal_dimension_worst +1.4 sd, smoothness_worst +1.3 sd
+     case  86  true malignant missed by  1/8  called malignant by  7  | furthest from cohort mean: fractal_dimension_worst +7.1 sd, compactness_worst +5.4 sd, concavity_worst +4.2 sd
+  (a malignant case missed by every model is a false negative the whole panel shares;
+   the sd column is the case's z-score on the standardised whole-30 representation)
+  errors by class across the panel: XGB rfe12 unscaled FN 2 FP 1, XGB all30 unscaled FN 3 FP 2, LogReg rfe12 scaled FN 1 FP 1, SVMlin rfe12 scaled FN 1 FP 1, ExtraTrees rfe12 FN 2 FP 1, RF all30 unscaled FN 3 FP 1, KNN20 all30 FN 4 FP 1, PCA12 XGB scaled FN 2 FP 3
+
+=== 6. CALIBRATION, MAP FITTED INSIDE THE 426, SCORED ON THE 143 ===
+  M_REF     raw     Brier 0.0215  logL 0.0901  ECE 0.0199
+  M_REF     sigmoid Brier 0.0191  logL 0.0975  ECE 0.0517  (moves 1 of 143 labels)
+  M_REF     isotonic Brier 0.0166  logL 0.0592  ECE 0.0230  (moves 1 of 143 labels)
+  RF all30  raw     Brier 0.0253  logL 0.0932  ECE 0.0324
+  RF all30  sigmoid Brier 0.0228  logL 0.0946  ECE 0.0279  (moves 0 of 143 labels)
+  RF all30  isotonic Brier 0.0238  logL 0.0826  ECE 0.0244  (moves 0 of 143 labels)
+  M_LIN     raw     Brier 0.0146  logL 0.0552  ECE 0.0216
+  M_LIN     sigmoid Brier 0.0203  logL 0.0915  ECE 0.0586  (moves 1 of 143 labels)
+  M_LIN     isotonic Brier 0.0139  logL 0.0515  ECE 0.0141  (moves 0 of 143 labels)
+
+=== 7. WHAT DOES THE PANEL BEAT? (baselines on the same 143 rows) ===
+  majority class (benign of the 426)           89/143
+  uniform chance draw                       72/143
+  single rule: concave points_worst >= 0.142  train 392/426  test 131/143
+  single rule: area_worst >= 869.300  train 388/426  test 136/143
+  single rule: perimeter_worst >= 113.100  train 387/426  test 136/143
+  single rule: radius_worst >= 16.820  train 389/426  test 136/143
+  (no model in between; the cut is fitted on the 426, never on the 143)
+
+=== 8. IS 426 ROWS ENOUGH? (learning curve, stratified 5-fold, training rows only) ===
+Traceback (most recent call last):
+  File "c:\Users\Surface\Desktop\publish\_p1_clin.py", line 302, in <module>
+    sizes, tr_s, va_s = learning_curve(mk(), Xa, ytr, cv=skf,
+  File "c:\Users\Surface\Desktop\publish\._pkgs\sklearn\utils\_param_validation.py", line 218, in wrapper
+    return func(*args, **kwargs)
+  File "c:\Users\Surface\Desktop\publish\._pkgs\sklearn\model_selection\_validation.py", line 2065, in learning_curve
+    results = parallel(
+  File "c:\Users\Surface\Desktop\publish\._pkgs\sklearn\utils\parallel.py", line 82, in __call__
+    return super().__call__(iterable_with_config_and_warning_filters)
+  File "c:\Users\Surface\Desktop\publish\._pkgs\joblib\parallel.py", line 2098, in __call__
+    return output if self.return_generator else list(output)
+  File "c:\Users\Surface\Desktop\publish\._pkgs\joblib\parallel.py", line 1704, in _get_outputs
+    yield from self._retrieve()
+  File "c:\Users\Surface\Desktop\publish\._pkgs\joblib\parallel.py", line 1806, in _retrieve
+    self._raise_error_fast()
+  File "c:\Users\Surface\Desktop\publish\._pkgs\joblib\parallel.py", line 1885, in _raise_error_fast
+    error_job.get_result(self.timeout)
+  File "c:\Users\Surface\Desktop\publish\._pkgs\joblib\parallel.py", line 780, in get_result
+    return self._return_or_raise()
+  File "c:\Users\Surface\Desktop\publish\._pkgs\joblib\parallel.py", line 795, in _return_or_raise
+    raise self._result
+joblib.externals.loky.process_executor.TerminatedWorkerError: A worker process managed by the executor was unexpectedly terminated. This could be caused by a segmentation fault while calling the function or by an excessive memory usage causing the Operating System to kill the worker.
+
+Detailed tracebacks of the workers should have been printed to stderr in the executor process if faulthandler was not disabled.
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+ModuleNotFoundError: No module named 'joblib'

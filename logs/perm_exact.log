@@ -1,0 +1,57 @@
+====================================================================================================
+EXACT PERMUTATION IMPORTANCE | RFE-12 | 4 families | 50 repeats/column
+====================================================================================================
+stack: sklearn 1.7.2 | numpy 1.26.4 | xgboost 1.7.2
+the retained twelve: area_se, area_worst, compactness_se, compactness_worst, concave points_mean, concave points_se, fractal_dimension_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, texture_worst
+         TW matches the logged run.
+
+family             baseline    largest   smallest
+XGBoost               0.979     0.0831       0.0000   (2.4s)
+Random forest         0.972     0.0154      -0.0007   (5.1s)
+Extra trees           0.979     0.0197      -0.0013   (23.9s)
+LogReg L2 (std)       0.986     0.0415       0.0000   (0.5s)
+
+feature                  XGBoost        Random forest  Extra trees    LogReg L2 (std)
+------------------------------------------------------------------------------------
+area_se                  0.0095         0.0004         0.0008         0.0371        
+area_worst               0.0204         0.0031         0.0119         0.0323        
+compactness_se           0.0048         0.0000         0.0000         0.0085        
+compactness_worst        0.0000         -0.0000        -0.0007        0.0255        
+concave points_mean      0.0831         0.0003         0.0197         0.0415        
+concave points_se        0.0000         -0.0007        -0.0013        0.0136        
+fractal_dimension_se     0.0000         0.0000         0.0000         0.0052        
+perimeter_worst          0.0164         0.0036         0.0197         0.0305        
+radius_worst             0.0067         0.0003         0.0122         0.0359        
+smoothness_se            0.0000         0.0000         0.0000         0.0000        
+smoothness_worst         0.0101         0.0029         0.0028         0.0119        
+texture_worst            0.0501         0.0154         0.0133         0.0322        
+------------------------------------------------------------------------------------
+[SHAP mean |phi|]        0.7335         1.2835         0.7832         0.5550         2.1956         0.3579         0.1379         0.8264         0.3787         0.1870         0.7622         1.3975        
+
+Ranking per family (best -> weakest):
+  XGBoost          concave points_mean > texture_worst > area_worst > perimeter_worst > smoothness_worst > area_se > radius_worst > compactness_se > compactness_worst > concave points_se > fractal_dimension_se > smoothness_se
+  Random forest    texture_worst > perimeter_worst > area_worst > smoothness_worst > area_se > concave points_mean > radius_worst > compactness_se > fractal_dimension_se > smoothness_se > compactness_worst > concave points_se
+  Extra trees      concave points_mean > perimeter_worst > texture_worst > radius_worst > area_worst > smoothness_worst > area_se > compactness_se > fractal_dimension_se > smoothness_se > compactness_worst > concave points_se
+  LogReg L2 (std)  concave points_mean > area_se > radius_worst > area_worst > texture_worst > perimeter_worst > compactness_worst > concave points_se > smoothness_worst > compactness_se > fractal_dimension_se > smoothness_se
+
+Spearman of each family's permutation ranking with M_REF's SHAP ranking:
+  XGBoost          rho +0.915
+  Random forest    rho +0.704
+  Extra trees      rho +0.732
+  LogReg L2 (std)  rho +0.594
+
+Cross-family mean accuracy drop (per column), descending:
+  concave points_mean      0.0362
+  texture_worst            0.0277
+  perimeter_worst          0.0176
+  area_worst               0.0169
+  radius_worst             0.0138
+  area_se                  0.0120
+  smoothness_worst         0.0069
+  compactness_worst        0.0062
+  compactness_se           0.0033
+  concave points_se        0.0029
+  fractal_dimension_se     0.0013
+  smoothness_se            0.0000
+
+Saved: c:\Users\Surface\Desktop\publish\perm_exact.json

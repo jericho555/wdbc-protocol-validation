@@ -1,0 +1,148 @@
+================================================================================================
+PANEL | stack B | xgboost 1.7.2 | numpy 1.26.4 | sklearn 1.7.2
+================================================================================================
+
+=== 0. WHAT IS NOT RUN, AND WHY ===
+Regression families (simple/multiple/polynomial/ridge/lasso/elastic-net/Bayesian/quantile
+regression, tree and ensemble regressors, SVR, KNN regressor, LOWESS, GP regression): the
+target is `diagnosis`, a binary label. There is no continuous outcome in data.csv, and
+mapping M/B to 1/0 to feed a least-squares fit would be a linear-probability model presented
+as a classifier - an invented target, not a measured one. Not run.
+Time-series families (AR, MA, ARMA, ARIMA, SARIMA, SARIMAX, VAR, VECM, exponential
+smoothing, Holt, Holt-Winters, Prophet, DeepAR, N-BEATS, N-HiTS): WDBC rows are one
+measurement set per patient, with no time index and no ordering carrying meaning. The csv
+row order is alphabetical by identifier. Any autoregressive structure fitted to it would be
+an artefact of file layout. Not run. statsmodels is also not installed here.
+Sequential deep models (RNN, LSTM, GRU, TCN, Transformer, TFT): same objection, plus 426
+training rows. Not run.
+Generative deep models (VAE, GAN, conditional GAN, diffusion, normalising flows): 569 rows,
+30 features, no density-based claim the paper needs. Not run. The legitimate generative
+content is already classical and testable: LDA and QDA are Gaussian class-conditional
+density classifiers, and a two-component Gaussian mixture is the soft-clustering analogue of
+fuzzy c-means (scikit-fuzzy is not installed).
+Probabilistic sequence models (Bayesian networks, HMM with continuous emissions, Kalman and
+particle filters): pgmpy/statsmodels not installed, and no sequence exists to filter. Not run.
+Kernel PCA, PCA, Factor Analysis, ICA, t-SNE and the clustering panel are run in
+_p1_reduct.py. LightGBM, CatBoost, UMAP and shap are not installed in either local stack.
+
+Two column conventions in the tables below. Brier, log-loss and ECE are printed only where
+the model really emits a probability: SVC, NuSVC and NearestCentroid do not at their default
+settings, so their row shows n/a in those three columns and the AUC is marked as computed
+from the decision margin. And "[it n]" is printed only for the iterative solvers where that
+number means solver iterations; libsvm's n_iter_ counts dual-objective sweeps (it printed
+6,265,550 for one linear SVC) and is not comparable.
+One compatibility shim is used and is not a modelling choice: xgboost 1.7.2 declares
+_estimator_type on the instance, so sklearn 1.7.2's tag-based is_classifier() rejects
+XGBClassifier inside VotingClassifier. The voting member is a subclass that declares the same
+attribute at class level. No hyper-parameter and no fitted value changes.
+file data.csv | 569 x 30 | benign 357 / malignant 212
+
+test partition: 143 cases (89 benign / 54 malignant)
+
+================================================================================================
+=== ARM: native ===
+================================================================================================
+RFE-12 in this arm: area_se, area_worst, compactness_se, compactness_worst, concave points_mean, concave points_se, fractal_dimension_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, texture_worst
+
+--- native / full30, 30 features ---
+model                       corr  sens  spec   FN   FP    AUC  Brier   logL    ECE
+KNN k=20                   138/143 0.926 0.989    4    1  0.995  0.030  0.103  0.033 
+SVM linear                 137/143 0.926 0.978    4    2  0.994    n/a     n/a     n/a   [AUC from margin]
+LogReg L2 (lbfgs)          138/143 0.944 0.978    3    2  0.995  0.028  0.097  0.027  [not converged] [it 100]
+MLP default                132/143 1.000 0.876    0   11  0.994  0.060  0.187  0.100  [it 57]
+MLP (seed 0)               140/143 0.981 0.978    1    2  0.998  0.025  0.096  0.044  [it 130]
+Random Forest 100          139/143 0.944 0.989    3    1  0.995  0.025  0.093  0.032 
+XGBoost                    138/143 0.944 0.978    3    2  0.993  0.024  0.094  0.010 
+LogReg L1 (liblinear)      137/143 0.926 0.978    4    2  0.997  0.026  0.081  0.021  [it 82]
+LogReg EN (saga)           136/143 0.889 0.989    6    1  0.978  0.077  0.287  0.142  [not converged] [it 100]
+LDA (svd)                  138/143 0.926 0.989    4    1  0.993  0.031  0.109  0.027 
+LDA (shrinkage)            139/143 0.944 0.989    3    1  0.997  0.021  0.071  0.017 
+QDA                        138/143 0.963 0.966    2    3  0.989  0.037  0.408  0.037 
+Gaussian Process clf       104/143 0.352 0.955   35    4  0.573  0.250  0.693  0.122 
+Decision tree              133/143 0.944 0.921    3    7  0.933  0.070  0.966  0.070 
+Extra trees                140/143 0.963 0.989    2    1  0.998  0.021  0.089  0.047 
+GradBoost sklrn            137/143 0.944 0.966    3    3  0.995  0.030  0.106  0.035 
+AdaBoost                   137/143 0.944 0.966    3    3  0.994  0.112  0.401  0.278 
+NuSVC                      128/143 0.722 1.000   15    0  0.988    n/a     n/a     n/a   [AUC from margin]
+SVM rbf                    136/143 0.889 0.989    6    1  0.993    n/a     n/a     n/a   [AUC from margin]
+Nearest centroid           133/143 0.815 1.000   10    0  0.995  0.055  0.461  0.055 
+Vote RF+XGB+LDA            FAILED ValueError: The estimator XGBc should be a classifier.
+
+--- native / rfe12, 12 features ---
+model                       corr  sens  spec   FN   FP    AUC  Brier   logL    ECE
+KNN k=20                   135/143 0.889 0.978    6    2  0.986  0.043  0.137  0.037 
+SVM linear                 138/143 0.944 0.978    3    2  0.998    n/a     n/a     n/a   [AUC from margin]
+LogReg L2 (lbfgs)          138/143 0.944 0.978    3    2  0.995  0.027  0.099  0.030  [not converged] [it 100]
+MLP default                137/143 0.944 0.966    3    3  0.992  0.037  0.137  0.046  [it 199]
+MLP (seed 0)               134/143 0.870 0.978    7    2  0.988  0.045  0.163  0.041  [it 168]
+Random Forest 100          139/143 0.944 0.989    3    1  0.997  0.021  0.082  0.037 
+XGBoost                    140/143 0.963 0.989    2    1  0.996  0.019  0.068  0.018 
+LogReg L1 (liblinear)      137/143 0.926 0.978    4    2  0.996  0.027  0.090  0.025  [it 58]
+LogReg EN (saga)           130/143 0.796 0.978   11    2  0.967  0.119  0.404  0.206  [not converged] [it 100]
+LDA (svd)                  138/143 0.944 0.978    3    2  0.995  0.024  0.089  0.031 
+LDA (shrinkage)            139/143 0.944 0.989    3    1  0.998  0.023  0.072  0.017 
+QDA                        133/143 0.926 0.933    4    6  0.986  0.056  0.290  0.059 
+Gaussian Process clf       131/143 0.815 0.978   10    2  0.835  0.250  0.693  0.122 
+Decision tree              137/143 0.963 0.955    2    4  0.959  0.042  0.580  0.042 
+Extra trees                140/143 0.963 0.989    2    1  0.999  0.019  0.079  0.047 
+GradBoost sklrn            139/143 0.963 0.978    2    2  0.996  0.021  0.077  0.023 
+AdaBoost                   137/143 0.944 0.966    3    3  0.995  0.111  0.398  0.281 
+NuSVC                      131/143 0.778 1.000   12    0  0.991    n/a     n/a     n/a   [AUC from margin]
+SVM rbf                    136/143 0.889 0.989    6    1  0.991    n/a     n/a     n/a   [AUC from margin]
+Nearest centroid           131/143 0.778 1.000   12    0  0.998  0.037  0.168  0.038 
+Vote RF+XGB+LDA            FAILED ValueError: The estimator XGBc should be a classifier.
+
+================================================================================================
+=== ARM: scaled ===
+================================================================================================
+RFE-12 in this arm: area_se, area_worst, compactness_se, compactness_worst, concave points_mean, concave points_se, fractal_dimension_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, texture_worst
+
+--- scaled / full30, 30 features ---
+model                       corr  sens  spec   FN   FP    AUC  Brier   logL    ECE
+KNN k=20                   137/143 0.926 0.978    4    2  0.995  0.029  0.102  0.023 
+SVM linear                 139/143 0.963 0.978    2    2  0.995    n/a     n/a     n/a   [AUC from margin]
+LogReg L2 (lbfgs)          140/143 0.981 0.978    1    2  0.998  0.019  0.065  0.014  [it 19]
+MLP default                140/143 0.963 0.989    2    1  0.997  0.015  0.055  0.012  [not converged] [it 200]
+MLP (seed 0)               140/143 0.963 0.989    2    1  0.997  0.016  0.060  0.015  [not converged] [it 200]
+Random Forest 100          139/143 0.944 0.989    3    1  0.995  0.025  0.093  0.032 
+XGBoost                    138/143 0.944 0.978    3    2  0.993  0.024  0.094  0.010 
+LogReg L1 (liblinear)      139/143 0.981 0.966    1    3  0.997  0.019  0.066  0.018  [it 14]
+LogReg EN (saga)           141/143 0.981 0.989    1    1  0.998  0.015  0.056  0.021  [not converged] [it 100]
+LDA (svd)                  138/143 0.926 0.989    4    1  0.993  0.031  0.109  0.027 
+LDA (shrinkage)            139/143 0.944 0.989    3    1  0.997  0.021  0.071  0.017 
+QDA                        138/143 0.963 0.966    2    3  0.989  0.037  0.408  0.037 
+Gaussian Process clf       137/143 0.926 0.978    4    2  0.967  0.201  0.591  0.078 
+Decision tree              133/143 0.944 0.921    3    7  0.933  0.070  0.966  0.070 
+Extra trees                140/143 0.963 0.989    2    1  0.998  0.021  0.089  0.047 
+GradBoost sklrn            137/143 0.944 0.966    3    3  0.995  0.030  0.106  0.035 
+AdaBoost                   137/143 0.944 0.966    3    3  0.994  0.112  0.401  0.278 
+NuSVC                      136/143 0.926 0.966    4    3  0.995    n/a     n/a     n/a   [AUC from margin]
+SVM rbf                    139/143 0.963 0.978    2    2  0.997    n/a     n/a     n/a   [AUC from margin]
+Nearest centroid           135/143 0.926 0.955    4    4  0.995  0.055  0.461  0.055 
+Vote RF+XGB+LDA            FAILED ValueError: The estimator XGBc should be a classifier.
+
+--- scaled / rfe12, 12 features ---
+model                       corr  sens  spec   FN   FP    AUC  Brier   logL    ECE
+KNN k=20                   139/143 0.944 0.989    3    1  0.995  0.025  0.091  0.016 
+SVM linear                 141/143 0.981 0.989    1    1  0.999    n/a     n/a     n/a   [AUC from margin]
+LogReg L2 (lbfgs)          141/143 0.981 0.989    1    1  0.999  0.015  0.055  0.022  [it 16]
+MLP default                140/143 0.981 0.978    1    2  0.999  0.012  0.043  0.025  [not converged] [it 200]
+MLP (seed 0)               141/143 0.981 0.989    1    1  0.999  0.011  0.042  0.016  [not converged] [it 200]
+Random Forest 100          139/143 0.944 0.989    3    1  0.997  0.021  0.082  0.037 
+XGBoost                    140/143 0.963 0.989    2    1  0.996  0.019  0.068  0.018 
+LogReg L1 (liblinear)      141/143 0.981 0.989    1    1  0.999  0.016  0.058  0.028  [it 15]
+LogReg EN (saga)           141/143 0.981 0.989    1    1  0.999  0.015  0.055  0.022  [not converged] [it 100]
+LDA (svd)                  138/143 0.944 0.978    3    2  0.995  0.024  0.089  0.031 
+LDA (shrinkage)            139/143 0.944 0.989    3    1  0.998  0.023  0.072  0.017 
+QDA                        133/143 0.926 0.933    4    6  0.986  0.056  0.290  0.059 
+Gaussian Process clf       140/143 0.963 0.989    2    1  0.988  0.099  0.344  0.178 
+Decision tree              137/143 0.963 0.955    2    4  0.959  0.042  0.580  0.042 
+Extra trees                140/143 0.963 0.989    2    1  0.999  0.019  0.079  0.047 
+GradBoost sklrn            139/143 0.963 0.978    2    2  0.996  0.021  0.077  0.023 
+AdaBoost                   137/143 0.944 0.966    3    3  0.995  0.111  0.398  0.281 
+NuSVC                      138/143 0.926 0.989    4    1  0.996    n/a     n/a     n/a   [AUC from margin]
+SVM rbf                    140/143 0.963 0.989    2    1  0.998    n/a     n/a     n/a   [AUC from margin]
+Nearest centroid           137/143 0.907 0.989    5    1  0.998  0.037  0.168  0.038 
+Vote RF+XGB+LDA            FAILED ValueError: The estimator XGBc should be a classifier.
+
+saved: _p1_panel_b.txt

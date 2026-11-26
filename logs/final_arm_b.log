@@ -1,0 +1,165 @@
+==============================================================================
+ENV B | xgboost 1.7.2 | numpy 1.26.4 | sklearn 1.7.2
+==============================================================================
+file data.csv | 569 x 30 | benign 357 / malignant 212
+
+test partition: 143 cases (89 benign / 54 malignant)
+
+=== 1. TABLE I, REFERENCE PARTITION (notebook calls, unchanged) ===
+KNN                  138/143   92.1-98.5   sens 0.926  spec 0.989  FN 4  FP 1  prec 0.980  F1 0.952
+SVM                  137/143   91.1-98.1   sens 0.926  spec 0.978  FN 4  FP 2  prec 0.962  F1 0.943
+Logistic Regression  138/143   92.1-98.5   sens 0.944  spec 0.978  FN 3  FP 2  prec 0.962  F1 0.953
+MLP                  139/143   93.0-98.9   sens 0.926  spec 1.000  FN 4  FP 0  prec 1.000  F1 0.962
+Random Forest        138/143   92.1-98.5   sens 0.944  spec 0.978  FN 3  FP 2  prec 0.962  F1 0.953
+XGBoost              138/143   92.1-98.5   sens 0.944  spec 0.978  FN 3  FP 2  prec 0.962  F1 0.953
+convergence warnings in this run: none
+
+=== 2. REDUCED MODEL, WRAPPER TREE SEEDED (random_state=0) ===
+XGBoost+RFE          140/143   94.0-99.3   sens 0.963  spec 0.989  FN 2  FP 1  prec 0.981  F1 0.972
+selected: concave points_mean, area_se, smoothness_se, compactness_se, concave points_se, fractal_dimension_se, radius_worst, texture_worst, perimeter_worst, area_worst, smoothness_worst, compactness_worst
+
+=== 2b. THE SAME MODEL WITH THE NOTEBOOK'S UNSEEDED WRAPPER, 30 REFITS ===
+correct counts : {137: 2, 139: 11, 140: 14, 141: 3}
+distinct subsets: 15 ; most common seen 4/30
+
+=== 3. THIRTY PAIRED PARTITIONS, seeds 0-29, the notebook's unseeded wrapper ===
+seed       full      rfe12   diff
+   0      141/143      140/143     -1
+   1      137/143      136/143     -1
+   2      136/143      135/143     -1
+   3      136/143      136/143     +0
+   4      134/143      133/143     -1
+   5      141/143      140/143     -1
+   6      134/143      136/143     +2
+   7      141/143      138/143     -3
+   8      135/143      138/143     +3
+   9      138/143      139/143     +1
+  10      140/143      140/143     +0
+  11      142/143      140/143     -2
+  12      133/143      134/143     +1
+  13      136/143      136/143     +0
+  14      135/143      137/143     +2
+  15      136/143      135/143     -1
+  16      137/143      138/143     +1
+  17      140/143      138/143     -2
+  18      138/143      137/143     -1
+  19      137/143      137/143     +0
+  20      138/143      135/143     -3
+  21      138/143      138/143     +0
+  22      134/143      135/143     +1
+  23      140/143      138/143     -2
+  24      139/143      139/143     +0
+  25      135/143      136/143     +1
+  26      138/143      137/143     -1
+  27      135/143      136/143     +1
+  28      135/143      135/143     +0
+  29      138/143      140/143     +2
+
+full   : 137.23 +- 2.46  range 133-142
+reduced: 137.07 +- 1.95  range 133-140
+paired : -0.17 cases, 95% CI -0.70 to +0.37, better 10 / worse 13 / tied 7
+
+feature stability across the 30 partitions (the notebook's unseeded wrapper):
+  concavity_worst            30/30
+  texture_worst              30/30
+  concave points_worst       29/30
+  area_worst                 27/30
+  compactness_worst          26/30
+  perimeter_worst            25/30
+  area_se                    23/30
+  smoothness_worst           23/30
+  radius_worst               20/30
+  concave points_mean        14/30
+  fractal_dimension_se       14/30
+  texture_mean               12/30
+  smoothness_se              11/30
+  radius_se                  10/30
+  symmetry_se                 8/30
+  symmetry_worst              8/30
+  concave points_se           7/30
+  perimeter_se                7/30
+  texture_se                  7/30
+  symmetry_mean               6/30
+  concavity_mean              5/30
+  fractal_dimension_mean      5/30
+  area_mean                   3/30
+  compactness_se              3/30
+  concavity_se                2/30
+  fractal_dimension_worst     2/30
+  smoothness_mean             2/30
+  compactness_mean            1/30
+selected in all 30: 2
+
+=== 3. THIRTY PAIRED PARTITIONS, seeds 0-29, wrapper seeded at 0 ===
+seed       full      rfe12   diff
+   0      141/143      142/143     +1
+   1      137/143      137/143     +0
+   2      136/143      136/143     +0
+   3      136/143      136/143     +0
+   4      134/143      134/143     +0
+   5      141/143      140/143     -1
+   6      134/143      136/143     +2
+   7      141/143      138/143     -3
+   8      135/143      138/143     +3
+   9      138/143      140/143     +2
+  10      140/143      140/143     +0
+  11      142/143      138/143     -4
+  12      133/143      135/143     +2
+  13      136/143      137/143     +1
+  14      135/143      137/143     +2
+  15      136/143      135/143     -1
+  16      137/143      137/143     +0
+  17      140/143      137/143     -3
+  18      138/143      137/143     -1
+  19      137/143      136/143     -1
+  20      138/143      134/143     -4
+  21      138/143      138/143     +0
+  22      134/143      135/143     +1
+  23      140/143      139/143     -1
+  24      139/143      139/143     +0
+  25      135/143      135/143     +0
+  26      138/143      137/143     -1
+  27      135/143      137/143     +2
+  28      135/143      135/143     +0
+  29      138/143      138/143     +0
+
+full   : 137.23 +- 2.46  range 133-142
+reduced: 137.10 +- 1.92  range 134-142
+paired : -0.13 cases, 95% CI -0.75 to +0.49, better 9 / worse 10 / tied 11
+
+feature stability across the 30 partitions (wrapper seeded at 0):
+  texture_worst              30/30
+  concave points_worst       29/30
+  concavity_worst            29/30
+  area_worst                 26/30
+  perimeter_worst            26/30
+  area_se                    23/30
+  compactness_worst          23/30
+  radius_worst               20/30
+  smoothness_worst           20/30
+  fractal_dimension_se       16/30
+  concave points_mean        14/30
+  texture_mean               13/30
+  smoothness_se              11/30
+  symmetry_se                10/30
+  radius_se                   9/30
+  perimeter_se                8/30
+  symmetry_worst              8/30
+  texture_se                  8/30
+  concave points_se           7/30
+  concavity_mean              6/30
+  compactness_se              5/30
+  symmetry_mean               5/30
+  area_mean                   3/30
+  concavity_se                3/30
+  fractal_dimension_mean      3/30
+  smoothness_mean             3/30
+  fractal_dimension_worst     2/30
+selected in all 30: 1
+
+=== 4. THE TWO UNSEEDED CONFIGURATIONS, 30 FITS ON THE REFERENCE PARTITION ===
+Random Forest  min 138  median 139  max 139  sd 0.50  distinct {138: 13, 139: 17}
+MLP            min 130  median 136  max 140  sd 1.98  distinct {130: 1, 133: 2, 134: 4, 135: 4, 136: 8, 137: 5, 138: 5, 140: 1}
+
+=== 5. THE BOOSTED MODEL ITSELF, TEN REFITS ON FIXED INPUT ===
+identical to the first fit: 9/9 ; correct 140/143

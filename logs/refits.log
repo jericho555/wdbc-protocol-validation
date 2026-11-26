@@ -1,0 +1,40 @@
+xgboost 1.7.2 | numpy 1.26.4 | test 143 (89 benign / 54 malignant)
+
+--- 30 refits, wrapper tree unseeded (the notebook's call) ---
+  correct counts : {137: 4, 138: 2, 139: 6, 140: 18}
+  mean 139.27  sd 1.08  min 137  max 140
+  distinct subsets: 19
+     4 x  area_se, area_worst, compactness_se, compactness_worst, concave points_mean, concave points_se, fractal_dimension_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, texture_worst
+     3 x  area_se, area_worst, compactness_worst, concave points_mean, concave points_se, concave points_worst, concavity_worst, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, texture_worst
+     3 x  area_se, area_worst, compactness_worst, concave points_mean, concave points_se, concavity_se, fractal_dimension_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, texture_worst
+     3 x  area_se, area_worst, compactness_worst, concave points_mean, concave points_se, fractal_dimension_se, perimeter_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, texture_worst
+     2 x  area_se, area_worst, concave points_mean, concave points_se, fractal_dimension_se, perimeter_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, symmetry_se, texture_worst
+     2 x  area_se, area_worst, concave points_mean, concave points_se, fractal_dimension_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, symmetry_se, texture_se, texture_worst
+     1 x  area_worst, concave points_mean, concave points_se, concave points_worst, concavity_worst, fractal_dimension_se, perimeter_worst, radius_se, radius_worst, smoothness_se, smoothness_worst, texture_worst
+     1 x  area_se, area_worst, compactness_worst, concave points_mean, concave points_se, concavity_worst, perimeter_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, texture_worst
+     1 x  area_se, area_worst, compactness_worst, concave points_mean, concave points_se, fractal_dimension_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, symmetry_se, texture_worst
+     1 x  area_se, area_worst, compactness_worst, concave points_mean, concave points_se, concavity_worst, fractal_dimension_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, texture_worst
+     1 x  area_worst, compactness_worst, concave points_mean, concave points_se, concave points_worst, concavity_worst, fractal_dimension_se, radius_se, radius_worst, smoothness_se, smoothness_worst, texture_worst
+     1 x  area_worst, compactness_worst, concave points_mean, concave points_se, concavity_se, fractal_dimension_se, perimeter_worst, radius_se, radius_worst, smoothness_se, smoothness_worst, texture_worst
+     1 x  area_se, area_worst, compactness_se, concave points_mean, concave points_se, fractal_dimension_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, symmetry_se, texture_worst
+     1 x  area_se, area_worst, compactness_worst, concave points_mean, concave points_se, concavity_se, concavity_worst, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, texture_worst
+     1 x  area_se, area_worst, compactness_worst, concave points_mean, concave points_se, fractal_dimension_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, texture_se, texture_worst
+     1 x  area_worst, compactness_worst, concave points_mean, concave points_se, fractal_dimension_se, perimeter_worst, radius_se, radius_worst, smoothness_se, smoothness_worst, symmetry_se, texture_worst
+     1 x  area_worst, compactness_worst, concave points_mean, concave points_se, concave points_worst, concavity_worst, perimeter_worst, radius_se, radius_worst, smoothness_se, smoothness_worst, texture_worst
+     1 x  area_se, area_worst, compactness_worst, concave points_mean, concave points_se, concave points_worst, concavity_worst, radius_worst, smoothness_se, smoothness_worst, texture_se, texture_worst
+     1 x  area_se, area_worst, compactness_worst, concave points_mean, concave points_se, fractal_dimension_se, perimeter_worst, radius_se, radius_worst, smoothness_se, smoothness_worst, texture_worst
+
+--- wrapper tree seeded (random_state=0), five refits ---
+  5/5 refits: 140 correct  area_se, area_worst, compactness_se, compactness_worst, concave points_mean, concave points_se, fractal_dimension_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, texture_worst
+
+--- bare XGBoost, 300 trees, seed 42, nthread 4, ten refits on fixed input ---
+  0: correct 140  identical to previous n/a
+  1: correct 140  identical to previous True
+  2: correct 140  identical to previous True
+  3: correct 140  identical to previous True
+  4: correct 140  identical to previous True
+  5: correct 140  identical to previous True
+  6: correct 140  identical to previous True
+  7: correct 140  identical to previous True
+  8: correct 140  identical to previous True
+  9: correct 140  identical to previous True

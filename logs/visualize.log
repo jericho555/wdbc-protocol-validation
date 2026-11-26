@@ -1,0 +1,50 @@
+Output directory: c:\Users\Surface\Desktop\publish\paper1_journal\figures
+
+1/12: EDA overview...
+  Saved: fig_eda_overview.png  (1/12)
+2/12: Feature distributions...
+  Saved: fig_feature_distributions.png  (2/12)
+3/12: Model performance comparison...
+  Saved: fig_model_performance.png  (3/12)
+4/12: SHAP importance...
+  Saved: fig_shap_importance.png  (4/12)
+5/12: Logistic coefficients...
+  Saved: fig_logistic_coefficients.png  (5/12)
+6/12: Permutation importance (exact)...
+  Saved: fig_permutation_importance.png  (6/12)
+  exact run max drop: 0.0362 (concave points_mean), min drop: 0.0000
+7/12: Model agreement...
+  Saved: fig_model_agreement.png  (7/12)
+8/12: RFE-k sweep...
+  Saved: fig_rfe_k_sweep.png  (8/12)
+9/12: Stratified CV...
+  Saved: fig_stratified_cv.png  (9/12)
+10/12: Calibration...
+  Saved: fig_calibration.png  (10/12)
+11/12: Cost-sensitive analysis...
+  Saved: fig_cost_sensitive.png  (11/12)
+12/12: Feature importance consensus...
+  Saved: fig_importance_consensus.png  (12/12)
+
+======================================================================
+ALL 12 FIGURES GENERATED SUCCESSFULLY
+======================================================================
+
+Location: c:\Users\Surface\Desktop\publish\paper1_journal\figures
+
+Figure list:
+  fig_calibration.png                       (352 KB)
+  fig_corr.png                              (357 KB)
+  fig_cost_sensitive.png                    (202 KB)
+  fig_eda_overview.png                      (620 KB)
+  fig_feature_distributions.png             (490 KB)
+  fig_importance_consensus.png              (138 KB)
+  fig_lime.png                              (68 KB)
+  fig_logistic_coefficients.png             (180 KB)
+  fig_model_agreement.png                   (259 KB)
+  fig_model_performance.png                 (302 KB)
+  fig_permutation_importance.png            (266 KB)
+  fig_pipeline.png                          (131 KB)
+  fig_rfe_k_sweep.png                       (295 KB)
+  fig_shap_importance.png                   (236 KB)
+  fig_stratified_cv.png                     (192 KB)

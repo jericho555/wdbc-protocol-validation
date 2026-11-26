@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+venv/
+.env
+._pkgs/
+._pkgs17/
+*.pdf
+.vscode/
+.idea/

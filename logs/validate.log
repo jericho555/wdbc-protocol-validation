@@ -1,0 +1,43 @@
+=== STRUCTURE ===
+lines            : 228
+begin{document}  : 1
+end{document}    : 1
+environments     : ['IEEEkeywords', 'abstract', 'document', 'figure', 'itemize', 'table', 'tabular']
+unclosed         : none
+mismatches       : none
+
+=== BRACES ===
+final depth      : 0 (max 2)
+
+=== CITATIONS ===
+bib entries      : 24
+cited keys       : 24
+MISSING          : none
+UNUSED           : none
+
+=== CROSS REFERENCES ===
+labels           : 9
+refs             : 9
+BROKEN           : none
+UNUSED labels    : none
+
+=== FIGURES ===
+  figures/fig_lime.png               68.3 KB
+
+=== TABULAR WIDTHS ===
+
+=== HYGIENE ===
+non-ASCII        : none
+stray CR         : 0
+em dashes        : 0
+placeholders     : none
+
+=== LENGTH ===
+abstract words   : 250 (IEEE asks for 150-250)
+body words       : 4690
+floats           : 3 figures+tables
+estimated pages  : 6.1 (+ references, about 0.9 for 24 entries)
+target           : 6 pages including references
+
+=== RESULT ===
+clean

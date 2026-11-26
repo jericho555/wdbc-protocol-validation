@@ -1,0 +1,67 @@
+====================================================================================================
+PROTOCOL | stack B | sklearn 1.7.2 | xgboost 1.7.2
+====================================================================================================
+
+=== 1. STRATIFIED CV WITH THE SELECTOR INSIDE EACH FOLD ===
+20 folds: 5-fold stratified, repeated 4 times with different fold assignments. The held-out
+fold never contributes to the RFE ranking, so the subset is chosen blind to it every time.
+This is the protocol the manuscript says has not been run.
+  XGBoost, all 30, native scale  mean 0.1934 of 569 (27.66 cases per 143-equivalent), sd across 20 folds 0.0037
+      pooled: 2201/2276 correct  sens 0.946  spec 0.980  FN   46  FP   29   AUC(mean of folds) 0.9927
+  XGBoost + seeded RFE-12, native mean 0.1929 of 569 (27.58 cases per 143-equivalent), sd across 20 folds 0.0034
+      pooled: 2195/2276 correct  sens 0.945  spec 0.976  FN   47  FP   34   AUC(mean of folds) 0.9933
+  LogReg L2 + RFE-12, standardised mean 0.1946 of 569 (27.82 cases per 143-equivalent), sd across 20 folds 0.0026
+      pooled: 2214/2276 correct  sens 0.942  spec 0.991  FN   49  FP   13   AUC(mean of folds) 0.9935
+  LogReg L2, all 30, standardised mean 0.1951 of 569 (27.90 cases per 143-equivalent), sd across 20 folds 0.0031
+      pooled: 2220/2276 correct  sens 0.955  spec 0.987  FN   38  FP   18   AUC(mean of folds) 0.9948
+  LogReg L2, all 30, native scale mean 0.1904 of 569 (27.23 cases per 143-equivalent), sd across 20 folds 0.0039
+      pooled: 2167/2276 correct  sens 0.922  spec 0.970  FN   66  FP   43   AUC(mean of folds) 0.9916
+  Random Forest, all 30, native  mean 0.1922 of 569 (27.48 cases per 143-equivalent), sd across 20 folds 0.0035
+      pooled: 2187/2276 correct  sens 0.936  spec 0.975  FN   54  FP   35   AUC(mean of folds) 0.9901
+  SVM rbf + RFE-12, standardised mean 0.1941 of 569 (27.76 cases per 143-equivalent), sd across 20 folds 0.0038
+      pooled: 2209/2276 correct  sens 0.945  spec 0.986  FN   47  FP   20   AUC(mean of folds) n/a
+  SVM linear, all 30, standardised mean 0.1946 of 569 (27.83 cases per 143-equivalent), sd across 20 folds 0.0022
+      pooled: 2215/2276 correct  sens 0.953  spec 0.985  FN   40  FP   21   AUC(mean of folds) n/a
+  MLP (seed 0, 4000 it), std, all 30 mean 0.1951 of 569 (27.90 cases per 143-equivalent), sd across 20 folds 0.0026
+      pooled: 2220/2276 correct  sens 0.958  spec 0.986  FN   36  FP   20   AUC(mean of folds) 0.9945
+
+=== 2. PAIRED ACROSS FOLDS: DOES THE REDUCTION MOVE ANYTHING? ===
+Same fold assignments for both models, so the comparison is paired case by case.
+  reduced-12 minus all-30 (XGB)                mean -0.05 pp, 95% CI -0.17 to +0.07, paired t p 0.400 (wins 6, losses 8, ties 6)
+     folds are not independent (4 repeats share rows), so the interval is optimistic
+  std-logistic-12 minus native-logistic-30     mean +0.41 pp, 95% CI +0.27 to +0.55, paired t p 0.000 (wins 17, losses 1, ties 2)
+     folds are not independent (4 repeats share rows), so the interval is optimistic
+
+=== 3. THE STOPPING RULE, TESTED (RFE target size, 20 stratified folds each) ===
+"whether 8 or 16 would do the same job was not tested" - this is that test.
+  k      XGB corr/569   LogReg(std)    RF             subset overlap with the reference twelve
+  (reference twelve, fitted once on the 426: area_se, area_worst, compactness_se, compactness_worst, concave points_mean, concave points_se, fractal_dimension_se, perimeter_worst, radius_worst, smoothness_se, smoothness_worst, texture_worst)
+  4      108.8          110.2          108.6          4 of 12
+  6      109.8          109.2          109.4          6 of 12
+  8      110.0          110.0          109.4          8 of 12
+  10     110.4          109.4          109.2          10 of 12
+  12     110.4          111.0          109.2          12 of 12
+  16     110.4          111.2          109.0          12 of 12
+  20     110.0          111.0          109.2          12 of 12
+  24     110.8          110.8          110.0          12 of 12
+  28     110.6          111.6          109.4          12 of 12
+  30     110.4          111.4          109.8          12 of 12
+
+=== 4. A LITTLE TUNING, IN FOLDS ONLY (the "nothing was tuned" gap) ===
+Grid search nested inside the cross-validation: for each outer training fold, a 3-fold inner
+search chooses the hyper-parameter, and the outer fold scores the result. Nothing is picked on
+the outer test fold.
+  SVM, native scale (no scaler)       108.4 / 569 correct  (0.191)
+       chosen in 4 of 5 folds: [('C', 1), ('kernel', 'linear')]
+       chosen in 1 of 5 folds: [('C', 10), ('kernel', 'linear')]
+  (this row is deliberately the unscaled fit, to be read against the scaled one below; the scaler is not part of this pipeline)
+  SVM, properly scaled                111.0 / 569 correct  (0.195)
+       chosen in 3 of 5 folds: [('m__C', 0.1), ('m__kernel', 'linear')]
+       chosen in 2 of 5 folds: [('m__C', 1), ('m__kernel', 'rbf')]
+  Logistic, scaled, l1/l2 x C         111.4 / 569 correct  (0.196)
+       chosen in 4 of 5 folds: [('m__C', 0.1), ('m__penalty', 'l2')]
+       chosen in 1 of 5 folds: [('m__C', 0.1), ('m__penalty', 'l1')]
+  MLP, native scale (for contrast)    107.2 / 569 correct  (0.188)
+       chosen in 5 of 5 folds: [('hidden_layer_sizes', (100,))]
+
+done at 20:26:42

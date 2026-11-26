@@ -1,0 +1,52 @@
+xgboost 1.7.2 | numpy 1.26.4
+selected (12): concave points_mean, area_se, smoothness_se, compactness_se, concave points_se, fractal_dimension_se, radius_worst, texture_worst, perimeter_worst, area_worst, smoothness_worst, compactness_worst
+correct: 140/143
+
+=== INSTANCE test position 29 ===
+true label 1 (malignant); P(malignant) 0.9995, P(benign) 0.0005
+confidence of the 52 correctly classified malignant cases: 0.785 - 1.000, median 1.000
+c:\Users\Surface\Desktop\publish\._pkgs\sklearn\utils\validation.py:2749: UserWarning: X does not have valid feature names, but RFE was fitted with feature names
+  warnings.warn(
+
+=== LIME ===
+  concave points_mean > 0.07                           +0.3336
+  texture_worst > 29.49                                +0.2933
+  area_se > 43.48                                      +0.2317
+  area_worst > 1030.75                                 +0.1919
+  perimeter_worst > 123.47                             +0.1630
+  radius_worst > 18.42                                 +0.1369
+  smoothness_worst > 0.15                              +0.1265
+  compactness_se > 0.03                                -0.0769
+
+=== SHAP (exact TreeSHAP via pred_contribs) ===
+bias term: -1.0888 (constant for every row)
+global ranking by mean absolute contribution:
+   1 concave points_mean      2.1110
+   2 texture_worst            1.3716
+   3 area_worst               1.0909
+   4 perimeter_worst          0.8784
+   5 compactness_se           0.7894
+   6 smoothness_worst         0.7709
+   7 area_se                  0.7622
+   8 radius_worst             0.6852
+   9 compactness_worst        0.5409
+  10 concave points_se        0.3235
+  11 smoothness_se            0.2164
+  12 fractal_dimension_se     0.0932
+
+single case, same instance, contributions to the log-odds margin:
+  concave points_mean      +2.5392
+  texture_worst            +1.3664
+  area_worst               +1.2606
+  area_se                  +1.0474
+  smoothness_worst         +0.9905
+  radius_worst             +0.9111
+  perimeter_worst          +0.8975
+  compactness_se           -0.7246
+  compactness_worst        +0.7093
+  concave points_se        -0.3574
+  smoothness_se            +0.1139
+  fractal_dimension_se     -0.0549
+sum of contributions 8.6990 + bias -1.0888 = margin 7.6102
+
+written c:\Users\Surface\Desktop\publish\paper1_conf\figures\fig_lime.png

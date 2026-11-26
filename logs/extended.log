@@ -1,0 +1,131 @@
+====================================================================================================
+EXTENDED PANEL | stack B | sklearn 1.7.2 | xgboost 1.7.2 | numpy 1.26.4
+====================================================================================================
+twelve: concave points_mean, area_se, smoothness_se, compactness_se, concave points_se, fractal_dimension_se, radius_worst, texture_worst, perimeter_worst, area_worst, smoothness_worst, compactness_worst
+test partition: 143 cases (89 benign / 54 malignant)
+
+====================================================================================================
+=== ARM: native, RFE-12 ===
+====================================================================================================
+  HistGradientBoosting           138/143  sens 0.944 spec 0.978 FN  3 FP  2  AUC 0.9967  Brier 0.0214 logL 0.0759
+     ROC (FPR, TPR at 5 thresholds): (0.00, 0.00 @inf), (0.00, 0.02 @1.00), (0.02, 0.94 @0.62), (0.13, 0.98 @0.01), (1.00, 1.00 @0.00)
+     P-R (prec, rec at 5 thresholds): (0.38, 1.00 @0.00), (0.50, 1.00 @0.00), (0.75, 1.00 @0.00), (1.00, 0.69 @1.00), (1.00, 0.02 @1.00)
+     cost (FN=10.0, FP=1.0): total 32.0  (TP 51, FP 2, FN 3, TN 87)
+     cost (FN=5.0, FP=1.0): total 17.0  (TP 51, FP 2, FN 3, TN 87)
+     cost (FN=1.0, FP=5.0): total 13.0  (TP 51, FP 2, FN 3, TN 87)
+     decision curve (threshold, net_benefit, TP, FP): (0.1: 0.367, 53, 5), (0.3: 0.365, 53, 2), (0.5: 0.343, 51, 2), (0.7: 0.340, 51, 1), (0.9: 0.294, 51, 1)
+  Bagging (DT base)              139/143  sens 0.963 spec 0.978 FN  2 FP  2  AUC 0.9963  Brier 0.0248 logL 0.0873
+     ROC (FPR, TPR at 5 thresholds): (0.00, 0.00 @inf), (0.02, 0.94 @0.60), (0.10, 0.98 @0.22), (0.20, 1.00 @0.12), (1.00, 1.00 @0.00)
+     P-R (prec, rec at 5 thresholds): (0.38, 1.00 @0.00), (0.81, 1.00 @0.14), (0.93, 0.96 @0.46), (1.00, 0.89 @0.84), (1.00, 0.65 @1.00)
+     cost (FN=10.0, FP=1.0): total 22.0  (TP 52, FP 2, FN 2, TN 87)
+     cost (FN=5.0, FP=1.0): total 12.0  (TP 52, FP 2, FN 2, TN 87)
+     cost (FN=1.0, FP=5.0): total 12.0  (TP 52, FP 2, FN 2, TN 87)
+     decision curve (threshold, net_benefit, TP, FP): (0.1: 0.364, 54, 18), (0.3: 0.352, 52, 4), (0.5: 0.350, 52, 2), (0.7: 0.343, 49, 0), (0.9: 0.308, 44, 0)
+  RidgeClassifier                137/143  sens 0.926 spec 0.978 FN  4 FP  2  AUC 0.9973  Brier 0.5714 logL 1.1173
+     ROC (FPR, TPR at 5 thresholds): (0.00, 0.00 @inf), (0.00, 0.89 @0.27), (0.01, 0.91 @0.19), (0.02, 0.96 @-0.08), (1.00, 1.00 @-1.95)
+     P-R (prec, rec at 5 thresholds): (0.38, 1.00 @-1.95), (0.50, 1.00 @-0.87), (0.75, 1.00 @-0.40), (1.00, 0.69 @0.53), (1.00, 0.02 @2.27)
+     cost (FN=10.0, FP=1.0): total 170.0  (TP 37, FP 0, FN 17, TN 89)
+     cost (FN=5.0, FP=1.0): total 85.0  (TP 37, FP 0, FN 17, TN 89)
+     cost (FN=1.0, FP=5.0): total 17.0  (TP 37, FP 0, FN 17, TN 89)
+     decision curve (threshold, net_benefit, TP, FP): (0.1: 0.341, 49, 2), (0.3: 0.301, 43, 0), (0.5: 0.259, 37, 0), (0.7: 0.210, 30, 0), (0.9: 0.154, 22, 0)
+  SGDClassifier (log)            131/143  sens 0.852 spec 0.955 FN  8 FP  4  AUC 0.9035  Brier 0.0839 logL 2.8984
+     ROC (FPR, TPR at 5 thresholds): (0.00, 0.00 @inf), (0.00, 0.00 @inf), (0.04, 0.85 @1.00), (0.04, 0.85 @1.00), (1.00, 1.00 @0.00)
+     P-R (prec, rec at 5 thresholds): (0.38, 1.00 @0.00), (0.38, 1.00 @0.00), (0.38, 1.00 @0.00), (0.38, 1.00 @0.00), (0.92, 0.85 @1.00)
+     cost (FN=10.0, FP=1.0): total 84.0  (TP 46, FP 4, FN 8, TN 85)
+     cost (FN=5.0, FP=1.0): total 44.0  (TP 46, FP 4, FN 8, TN 85)
+     cost (FN=1.0, FP=5.0): total 28.0  (TP 46, FP 4, FN 8, TN 85)
+     decision curve (threshold, net_benefit, TP, FP): (0.1: 0.319, 46, 4), (0.3: 0.310, 46, 4), (0.5: 0.294, 46, 4), (0.7: 0.256, 46, 4), (0.9: 0.070, 46, 4)
+  Stacking (RF+XGB+LR meta)      141/143  sens 0.963 spec 1.000 FN  2 FP  0  AUC 0.9973  Brier 0.0180 logL 0.0872
+     ROC (FPR, TPR at 5 thresholds): (0.00, 0.00 @inf), (0.00, 0.96 @0.67), (0.10, 0.98 @0.08), (0.63, 1.00 @0.03), (1.00, 1.00 @0.03)
+     P-R (prec, rec at 5 thresholds): (0.38, 1.00 @0.03), (0.51, 1.00 @0.03), (0.75, 1.00 @0.04), (1.00, 0.70 @0.96), (1.00, 0.02 @0.97)
+     cost (FN=10.0, FP=1.0): total 20.0  (TP 52, FP 0, FN 2, TN 89)
+     cost (FN=5.0, FP=1.0): total 10.0  (TP 52, FP 0, FN 2, TN 89)
+     cost (FN=1.0, FP=5.0): total 2.0  (TP 52, FP 0, FN 2, TN 89)
+     decision curve (threshold, net_benefit, TP, FP): (0.1: 0.368, 53, 4), (0.3: 0.358, 52, 2), (0.5: 0.364, 52, 0), (0.7: 0.357, 51, 0), (0.9: 0.350, 50, 0)
+
+====================================================================================================
+=== ARM: scaled, RFE-12 ===
+====================================================================================================
+  HistGradientBoosting           138/143  sens 0.944 spec 0.978 FN  3 FP  2  AUC 0.9967  Brier 0.0214 logL 0.0759
+     ROC (FPR, TPR at 5 thresholds): (0.00, 0.00 @inf), (0.00, 0.02 @1.00), (0.02, 0.94 @0.62), (0.13, 0.98 @0.01), (1.00, 1.00 @0.00)
+     P-R (prec, rec at 5 thresholds): (0.38, 1.00 @0.00), (0.50, 1.00 @0.00), (0.75, 1.00 @0.00), (1.00, 0.69 @1.00), (1.00, 0.02 @1.00)
+     cost (FN=10.0, FP=1.0): total 32.0  (TP 51, FP 2, FN 3, TN 87)
+     cost (FN=5.0, FP=1.0): total 17.0  (TP 51, FP 2, FN 3, TN 87)
+     cost (FN=1.0, FP=5.0): total 13.0  (TP 51, FP 2, FN 3, TN 87)
+     decision curve (threshold, net_benefit, TP, FP): (0.1: 0.367, 53, 5), (0.3: 0.365, 53, 2), (0.5: 0.343, 51, 2), (0.7: 0.340, 51, 1), (0.9: 0.294, 51, 1)
+  Bagging (DT base)              139/143  sens 0.963 spec 0.978 FN  2 FP  2  AUC 0.9963  Brier 0.0248 logL 0.0873
+     ROC (FPR, TPR at 5 thresholds): (0.00, 0.00 @inf), (0.02, 0.94 @0.60), (0.10, 0.98 @0.22), (0.20, 1.00 @0.12), (1.00, 1.00 @0.00)
+     P-R (prec, rec at 5 thresholds): (0.38, 1.00 @0.00), (0.81, 1.00 @0.14), (0.93, 0.96 @0.46), (1.00, 0.89 @0.84), (1.00, 0.65 @1.00)
+     cost (FN=10.0, FP=1.0): total 22.0  (TP 52, FP 2, FN 2, TN 87)
+     cost (FN=5.0, FP=1.0): total 12.0  (TP 52, FP 2, FN 2, TN 87)
+     cost (FN=1.0, FP=5.0): total 12.0  (TP 52, FP 2, FN 2, TN 87)
+     decision curve (threshold, net_benefit, TP, FP): (0.1: 0.364, 54, 18), (0.3: 0.352, 52, 4), (0.5: 0.350, 52, 2), (0.7: 0.343, 49, 0), (0.9: 0.308, 44, 0)
+  RidgeClassifier                138/143  sens 0.944 spec 0.978 FN  3 FP  2  AUC 0.9969  Brier 0.5648 logL 0.8875
+     ROC (FPR, TPR at 5 thresholds): (0.00, 0.00 @inf), (0.00, 0.85 @0.37), (0.01, 0.93 @0.09), (0.02, 0.94 @0.07), (1.00, 1.00 @-1.78)
+     P-R (prec, rec at 5 thresholds): (0.38, 1.00 @-1.78), (0.50, 1.00 @-0.84), (0.75, 1.00 @-0.45), (1.00, 0.69 @0.57), (1.00, 0.02 @2.45)
+     cost (FN=10.0, FP=1.0): total 140.0  (TP 40, FP 0, FN 14, TN 89)
+     cost (FN=5.0, FP=1.0): total 70.0  (TP 40, FP 0, FN 14, TN 89)
+     cost (FN=1.0, FP=5.0): total 14.0  (TP 40, FP 0, FN 14, TN 89)
+     decision curve (threshold, net_benefit, TP, FP): (0.1: 0.335, 48, 1), (0.3: 0.319, 46, 1), (0.5: 0.280, 40, 0), (0.7: 0.217, 31, 0), (0.9: 0.161, 23, 0)
+  SGDClassifier (log)            140/143  sens 0.963 spec 0.989 FN  2 FP  1  AUC 0.9990  Brier 0.0159 logL 0.0556
+     ROC (FPR, TPR at 5 thresholds): (0.00, 0.00 @inf), (0.00, 0.39 @1.00), (0.00, 0.91 @1.00), (0.01, 0.91 @0.98), (1.00, 1.00 @0.00)
+     P-R (prec, rec at 5 thresholds): (0.38, 1.00 @0.00), (0.48, 1.00 @0.00), (0.66, 1.00 @0.00), (0.98, 0.94 @0.84), (1.00, 0.39 @1.00)
+     cost (FN=10.0, FP=1.0): total 21.0  (TP 52, FP 1, FN 2, TN 88)
+     cost (FN=5.0, FP=1.0): total 11.0  (TP 52, FP 1, FN 2, TN 88)
+     cost (FN=1.0, FP=5.0): total 7.0  (TP 52, FP 1, FN 2, TN 88)
+     decision curve (threshold, net_benefit, TP, FP): (0.1: 0.377, 54, 1), (0.3: 0.368, 53, 1), (0.5: 0.357, 52, 1), (0.7: 0.340, 51, 1), (0.9: 0.287, 50, 1)
+  Stacking (RF+XGB+LR meta)      141/143  sens 0.963 spec 1.000 FN  2 FP  0  AUC 0.9973  Brier 0.0180 logL 0.0872
+     ROC (FPR, TPR at 5 thresholds): (0.00, 0.00 @inf), (0.00, 0.96 @0.67), (0.10, 0.98 @0.08), (0.63, 1.00 @0.03), (1.00, 1.00 @0.03)
+     P-R (prec, rec at 5 thresholds): (0.38, 1.00 @0.03), (0.51, 1.00 @0.03), (0.75, 1.00 @0.04), (1.00, 0.70 @0.96), (1.00, 0.02 @0.97)
+     cost (FN=10.0, FP=1.0): total 20.0  (TP 52, FP 0, FN 2, TN 89)
+     cost (FN=5.0, FP=1.0): total 10.0  (TP 52, FP 0, FN 2, TN 89)
+     cost (FN=1.0, FP=5.0): total 2.0  (TP 52, FP 0, FN 2, TN 89)
+     decision curve (threshold, net_benefit, TP, FP): (0.1: 0.368, 53, 4), (0.3: 0.358, 52, 2), (0.5: 0.364, 52, 0), (0.7: 0.357, 51, 0), (0.9: 0.350, 50, 0)
+
+====================================================================================================
+=== EXTENDED INTERPRETATION ===
+====================================================================================================
+
+--- Model agreement matrix (fraction of 143 cases where both predict the same label) ---
+                                 Bagging (DT base) HistGradientBoosting RidgeClassifier SGDClassifier (log) Stacking (RF+XGB+LR meta)
+  Bagging (DT base)              1.000        0.979        0.979        0.965        0.986       
+  HistGradientBoosting           0.979        1.000        0.986        0.958        0.979       
+  RidgeClassifier                0.979        0.986        1.000        0.972        0.979       
+  SGDClassifier (log)            0.965        0.958        0.972        1.000        0.979       
+  Stacking (RF+XGB+LR meta)      0.986        0.979        0.979        0.979        1.000       
+
+--- Consensus analysis ---
+  majority-vote consensus accuracy: 0.979 (140/143)
+  cases where all 5 models agree: 136/143
+  cases where at least one disagrees: 7/143
+  disagreement cases (index, true_label, model_predictions):
+     case   8  true 0  predictions: 1, 1, 1, 0, 0
+     case  13  true 1  predictions: 1, 1, 1, 0, 1
+     case  77  true 1  predictions: 1, 0, 0, 1, 1
+     case  82  true 1  predictions: 0, 0, 0, 1, 0
+     case  92  true 0  predictions: 1, 0, 0, 0, 0
+     case 112  true 0  predictions: 0, 0, 1, 1, 0
+     case 136  true 0  predictions: 0, 1, 0, 0, 0
+
+--- AUC ranking (scaled RFE-12) ---
+  #1  SGDClassifier (log)             AUC 0.9990
+  #2  Stacking (RF+XGB+LR meta)       AUC 0.9973
+  #3  RidgeClassifier                 AUC 0.9969
+  #4  HistGradientBoosting            AUC 0.9967
+  #5  Bagging (DT base)               AUC 0.9963
+
+--- Brier score ranking (lower is better) ---
+  #1  SGDClassifier (log)             Brier 0.0159
+  #2  Stacking (RF+XGB+LR meta)       Brier 0.0180
+  #3  HistGradientBoosting            Brier 0.0214
+  #4  Bagging (DT base)               Brier 0.0248
+  #5  RidgeClassifier                 Brier 0.5648
+
+--- Calibration (ECE, lower is better) ---
+  #1  SGDClassifier (log)             ECE 0.0231
+  #2  HistGradientBoosting            ECE 0.0271
+  #3  Bagging (DT base)               ECE 0.0283
+  #4  Stacking (RF+XGB+LR meta)       ECE 0.0462
+  #5  RidgeClassifier                 ECE 0.0894
+
+done at 20:22:14
