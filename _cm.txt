@@ -1,0 +1,8 @@
+Add Supplementary Material and align conclusion with full panel
+
+- main.tex: reference Supplementary Table S1 and Figs S1-S2; rewrite the
+  conclusion so the six configurations that reach 141/143 on the standardised
+  RFE-12 arm are stated openly (stacking + logistic L2 kept as representatives,
+  stacking for zero false positives) rather than implying two top models.
+- Bundle Supplementary_Material.pdf (full 25-config table + LIME + correlation
+  figures) and the standalone competing-interest declaration in the archive.
