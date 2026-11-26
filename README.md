@@ -54,7 +54,7 @@ python scripts/visualize.py        # Regenerate all 15 figures
 | Parameter | Value |
 |-----------|-------|
 | Dataset | WDBC: 569 FNA samples, 30 features, binary (M/B) |
-| Split | 75/25 stratified, `random_state=42` → 426 train / 143 test |
+| Split | 75/25, `random_state=42` (shuffled, not stratified) → 426 train / 143 test |
 | Feature selection | RFE (DecisionTree, `random_state=0`), k=12, fitted on training rows only |
 | Scaling | `StandardScaler` fitted on training rows only |
 | Models | 25 model configurations, 20 distinct learning algorithms across 7 families (see Table 1) |
