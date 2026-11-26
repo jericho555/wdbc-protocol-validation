@@ -14,7 +14,7 @@ All code, data, experiment logs, and figures backing the manuscript. Every numbe
 ## Quick start
 
 ```bash
-git clone https://github.com/<you>/wdbc-protocol-validation.git
+git clone https://github.com/jericho555/wdbc-protocol-validation.git
 cd wdbc-protocol-validation
 pip install -r requirements.txt
 python scripts/run_panel.py        # Table 2: 25-model comparison
